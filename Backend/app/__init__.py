@@ -1,5 +1,5 @@
 # __init__.py
-
+from flask_migrate import Migrate
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -12,7 +12,11 @@ def create_app():
     app.config.from_object(config)
 
     db.init_app(app)
-    CORS(app)
+
+    migrate = Migrate(app, db)
+    
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
 
     # Register user routes
     from .user_routes import user_bp
@@ -21,6 +25,8 @@ def create_app():
     # ✅ Register crop recommendation route
     from .crop_routes import crop_bp
     app.register_blueprint(crop_bp, url_prefix='/crop')
-
+    
+    from .inventory_routes import inventory_bp
+    app.register_blueprint(inventory_bp, url_prefix="/inventory")
 
     return app

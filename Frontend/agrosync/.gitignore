@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 .env
-Frontend/agrosync/src/cPages/TalkToData.jsx
+
