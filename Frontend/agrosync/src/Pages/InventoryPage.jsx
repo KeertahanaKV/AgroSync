@@ -39,29 +39,36 @@ const InventoryPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const form = new FormData();
-    for (const key in formData) {
-      if (formData[key] !== "") {
-        form.append(key, formData[key]);
+  const form = new FormData();
+  for (const key in formData) {
+    if (formData[key] !== "") {
+      form.append(key, formData[key]);
+    }
+  }
+
+  //  Get token from localStorage
+  const token = localStorage.getItem("token");
+
+  try {
+    const res = await fetch(`${backendUrl}/inventory/add`, {
+      method: "POST",
+      body: form,
+      headers: {
+        "x-access-token": token  // ✅ Add this header
       }
-    }
+    });
 
-    try {
-      const res = await fetch(`${backendUrl}/inventory/add`, {
-        method: "POST",
-        body: form,
-      });
+    const result = await res.json();
+    alert(result.message);
+    navigate("/dashboard");
+  } catch (error) {
+    console.error("Inventory submission error:", error);
+    alert("Error submitting inventory");
+  }
+};
 
-      const result = await res.json();
-      alert(result.message);
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Inventory submission error:", error);
-      alert("Error submitting inventory");
-    }
-  };
 
   return (
     <div className="max-w-3xl mx-auto mt-10 bg-white p-8 rounded-lg shadow-lg">

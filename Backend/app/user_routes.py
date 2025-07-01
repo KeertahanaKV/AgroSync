@@ -63,7 +63,20 @@ def login():
 @user_bp.route("/dashboard", methods=["GET"])
 @token_required
 def dashboard(current_user):
+    inventory_items = [{
+        "id": item.id,
+        "name": item.name,
+        "price": item.price,
+        "quantity": item.quantity,
+        "remaining": item.remaining,
+        "category": item.category,
+        "dateBought": item.date_bought.strftime("%Y-%m-%d") if item.date_bought else "",
+        "expirationDate": item.expiration_date.strftime("%Y-%m-%d") if item.expiration_date else ""
+    } for item in current_user.inventories]
+
     return jsonify({
         "message": f"Welcome {current_user.name}",
-        "email": current_user.email
+        "email": current_user.email,
+        "inventory": inventory_items
     })
+
