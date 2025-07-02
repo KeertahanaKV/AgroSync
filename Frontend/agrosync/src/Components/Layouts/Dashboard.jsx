@@ -77,9 +77,7 @@ const Dashboard = () => {
 
       if (res.ok) {
         const updatedItems = userData.inventory.map((item) =>
-          item.id === editItem.id
-            ? { ...item, ...editedValues }
-            : item
+          item.id === editItem.id ? { ...item, ...editedValues } : item
         );
         setUserData({ ...userData, inventory: updatedItems });
         setIsEditOpen(false);
@@ -111,48 +109,45 @@ const Dashboard = () => {
   };
 
   const handleBadgeClick = (type) => {
-  let filtered = [];
+    let filtered = [];
 
-  if (type === "low") {
-    filtered = items.filter(
-      (item) =>
-        Number(item.remaining) > 0 &&
-        Number(item.remaining) < 0.3 * Number(item.quantity)
-    );
-    setModalTitle("Low Stock Items");
+    if (type === "low") {
+      filtered = items.filter(
+        (item) =>
+          Number(item.remaining) > 0 &&
+          Number(item.remaining) < 0.3 * Number(item.quantity)
+      );
+      setModalTitle("Low Stock Items");
+    } else if (type === "out") {
+      filtered = items.filter(
+        (item) =>
+          item.remaining != null &&
+          Number(item.remaining) === 0 &&
+          item.expirationDate
+      );
+      setModalTitle("Out of Stock Items");
+    } else if (type === "expired") {
+      filtered = items.filter(
+        (item) =>
+          item.expirationDate &&
+          new Date(item.expirationDate) < new Date()
+      );
+      setModalTitle("Expired Items");
+    } else if (type === "in") {
+      filtered = items.filter(
+        (item) =>
+          Number(item.remaining) >= 0.3 * Number(item.quantity) &&
+          (!item.expirationDate || new Date(item.expirationDate) >= new Date())
+      );
+      setModalTitle("In Stock Items");
+    }
 
-  } else if (type === "out") {
-    filtered = items.filter(
-      (item) =>
-        item.remaining != null &&
-        Number(item.remaining) === 0 &&
-        item.expirationDate // only include those with expiry date
-    );
-    setModalTitle("Out of Stock Items");
+    setModalItems(filtered);
+    setModalOpen(true);
+  };
 
-  } else if (type === "expired") {
-    filtered = items.filter(
-      (item) =>
-        item.expirationDate &&
-        new Date(item.expirationDate) < new Date()
-    );
-    setModalTitle("Expired Items");
-
-  } else if (type === "in") {
-    filtered = items.filter(
-      (item) =>
-        Number(item.remaining) >= 0.3 * Number(item.quantity) &&
-        (!item.expirationDate || new Date(item.expirationDate) >= new Date())
-    );
-    setModalTitle("In Stock Items");
-  }
-
-  setModalItems(filtered);
-  setModalOpen(true);
-};
-
-
-  if (error) return <div className="p-6 text-red-500 font-semibold">{error}</div>;
+  if (error)
+    return <div className="p-6 text-red-500 font-semibold">{error}</div>;
   if (!userData) return <p className="text-center mt-10">Loading dashboard...</p>;
 
   const categories = ["Seeds", "Fertilizers", "Tools", "Fruits"];
@@ -162,42 +157,70 @@ const Dashboard = () => {
   ).length;
 
   const totalOutOfStock = items.filter(
-    (item) =>item.remaining != null && Number(item.remaining) === 0
+    (item) => item.remaining != null && Number(item.remaining) === 0
   ).length;
 
   const totalInStock = items.filter(
-  (item) =>
-    Number(item.remaining) >= 0.3 * Number(item.quantity) &&
-    (!item.expirationDate || new Date(item.expirationDate) >= new Date())
-).length;
-
+    (item) =>
+      Number(item.remaining) >= 0.3 * Number(item.quantity) &&
+      (!item.expirationDate || new Date(item.expirationDate) >= new Date())
+  ).length;
 
   const totalExpired = items.filter(
     (item) => item.expirationDate && new Date(item.expirationDate) < new Date()
   ).length;
 
   return (
-    <div className="p-6 min-h-screen bg-gradient-to-br from-green-50 to-white">
+    <div className="p-6 min-h-screen bg-gradient-to-br from-green-50 to-white font-sans">
       <HeroSection />
 
       <div className="my-6 text-center space-y-2">
-        <p className="text-3xl m-5 text-gray-700">{userData.message || "Welcome!"}</p>
-        <div className="flex justify-center gap-4 flex-wrap">
-          <span onClick={() => handleBadgeClick("in")} className="cursor-pointer bg-green-100 text-green-800 px-3 py-1 rounded-full">In Stock: {totalInStock}</span>
-          <span onClick={() => handleBadgeClick("low")} className="cursor-pointer bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">Low Stock: {totalLowStock}</span>
-          <span onClick={() => handleBadgeClick("out")} className="cursor-pointer bg-red-100 text-red-700 px-3 py-1 rounded-full">Out of Stock: {totalOutOfStock}</span>
-          <span onClick={() => handleBadgeClick("expired")} className="cursor-pointer bg-gray-300 text-gray-700 px-3 py-1 rounded-full">Expired: {totalExpired}</span>
+        <motion.p
+          className="text-4xl font-bold text-green-800"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          {userData.message || "Welcome!"}
+        </motion.p>
+
+        <div className="flex justify-center gap-4 flex-wrap mt-4">
+          <span
+            onClick={() => handleBadgeClick("in")}
+            className="cursor-pointer bg-green-100 text-green-800 px-4 py-2 rounded-full hover:bg-green-200 shadow-md"
+          >
+            In Stock: {totalInStock}
+          </span>
+          <span
+            onClick={() => handleBadgeClick("low")}
+            className="cursor-pointer bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full hover:bg-yellow-200 shadow-md"
+          >
+            Low Stock: {totalLowStock}
+          </span>
+          <span
+            onClick={() => handleBadgeClick("out")}
+            className="cursor-pointer bg-red-100 text-red-700 px-4 py-2 rounded-full hover:bg-red-200 shadow-md"
+          >
+            Out of Stock: {totalOutOfStock}
+          </span>
+          <span
+            onClick={() => handleBadgeClick("expired")}
+            className="cursor-pointer bg-gray-200 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-300 shadow-md"
+          >
+            Expired: {totalExpired}
+          </span>
         </div>
       </div>
 
-      <div className="my-6 max-w-md mx-auto">
-        <input
-          type="text"
-          placeholder="Search inventory..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md"
-        />
+      <div className="my-8 max-w-md mx-auto">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="🔍 Search inventory..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 shadow-sm"
+          />
+        </div>
       </div>
 
       {categories.map((category) => (

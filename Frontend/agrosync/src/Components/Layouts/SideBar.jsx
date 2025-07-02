@@ -11,11 +11,10 @@ import React, { useState } from "react";
 const SideBar = () => {
   const menus = [
     { name: "Dashboard", link: "/dashboard", icon: MdOutlineDashboard },
-    { name: "Inventory", link: "/dashboard/inventory", icon: GiFarmTractor },
+    { name: "Add Inventory", link: "/dashboard/inventory", icon: GiFarmTractor },
      { name: "Crops", link: "/dashboard/crops", icon: GiGrain },
     { name: "Livestock", link: "/dashboard/livestock", icon: GiCow },
     { name: "Talk to Data", link: "/dashboard/talktodata", icon: BiData },
-    { name: "Analysis", link: "/dashboard/analysis", icon: TbAnalyze },
   ];
 
   const [open, setOpen] = useState(true);

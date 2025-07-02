@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import backendUrl from "../config"; // Example: http://localhost:5000
+import backendUrl from "../config";
 
 const CropRecommendationPage = () => {
   const [formData, setFormData] = useState({
@@ -34,16 +34,16 @@ const CropRecommendationPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-green-50 flex justify-center items-center px-4">
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-xl w-full">
-        <h1 className="text-3xl font-bold text-green-700 text-center mb-6">
-          🌱 Crop Recommendation
+    <div className="min-h-screen bg-gradient-to-r from-green-100 via-lime-100 to-green-50 flex justify-center items-center p-6">
+      <div className="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-2xl">
+        <h1 className="text-4xl font-bold text-green-700 text-center mb-6 tracking-wide">
+          🌱 Smart Crop Recommendation
         </h1>
 
-        <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit}>
+        <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
           {Object.entries(formData).map(([key, value]) => (
-            <div key={key} className="col-span-1">
-              <label className="block text-sm font-medium text-gray-700 capitalize">
+            <div key={key}>
+              <label className="block text-sm font-semibold text-gray-700 capitalize mb-1">
                 {key}
               </label>
               <input
@@ -53,16 +53,16 @@ const CropRecommendationPage = () => {
                 value={value}
                 onChange={handleChange}
                 placeholder={`Enter ${key}`}
-                className="mt-1 block w-full px-3 py-2 border rounded shadow-sm focus:ring-green-500 focus:border-green-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
                 required
               />
             </div>
           ))}
 
-          <div className="col-span-2 text-center mt-4">
+          <div className="md:col-span-2 text-center mt-4">
             <button
               type="submit"
-              className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition"
+              className="bg-green-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-green-700 transition-all duration-300"
             >
               Recommend Crop
             </button>
@@ -70,8 +70,8 @@ const CropRecommendationPage = () => {
         </form>
 
         {result && (
-          <div className="mt-6 text-center text-xl font-semibold text-green-800">
-            Recommended Crop: <span className="underline">{result}</span>
+          <div className="mt-8 text-center text-2xl font-semibold text-green-800 bg-green-100 p-4 rounded-xl shadow-sm">
+            🌾 Recommended Crop: <span className="underline">{result}</span>
           </div>
         )}
 
