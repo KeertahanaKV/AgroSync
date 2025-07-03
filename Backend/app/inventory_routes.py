@@ -120,6 +120,7 @@ def delete_inventory_item(current_user, item_id):
         return jsonify({"error": str(e)}), 500
 
 # ✏️ Update inventory item
+# ✏️ Update inventory item
 @inventory_bp.route("/update/<int:item_id>", methods=["PUT", "OPTIONS"])
 @cross_origin()
 @token_required
@@ -135,6 +136,8 @@ def update_inventory_item(current_user, item_id):
             item.price = float(data["price"])
         if "quantity" in data:
             item.quantity = int(data["quantity"])
+        if "remaining" in data:
+            item.remaining = int(data["remaining"])
 
         db.session.commit()
         return jsonify({
@@ -142,7 +145,8 @@ def update_inventory_item(current_user, item_id):
             "updatedItem": {
                 "id": item.id,
                 "price": item.price,
-                "quantity": item.quantity
+                "quantity": item.quantity,
+                "remaining": item.remaining
             }
         }), 200
     except Exception as e:

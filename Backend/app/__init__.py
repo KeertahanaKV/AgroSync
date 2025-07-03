@@ -22,10 +22,13 @@ def create_app():
     from .user_routes import user_bp
     app.register_blueprint(user_bp, url_prefix='/user')
 
-    # ✅ Register crop recommendation route
+    #  Register crop recommendation route
     from .crop_routes import crop_bp
     app.register_blueprint(crop_bp, url_prefix='/crop')
     
+    from .livestock_routes import livestock_bp
+    app.register_blueprint(livestock_bp,url_prefix='/disease')
+
     from .inventory_routes import inventory_bp
     app.register_blueprint(inventory_bp, url_prefix="/inventory")
 
