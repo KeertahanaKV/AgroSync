@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { FaMicrophone, FaStop, FaPaperPlane, FaTimes } from 'react-icons/fa';
 import { Player } from "@lottiefiles/react-lottie-player";
 import agrobot from "../assets/agrobot-illustration.png"
-const API_KEY = 'AIzaSyDgNm0jaNBvafKYawi2nsetBKTvCMapcIU'; 
+const API_KEY =import.meta.env.VITE_GEMINI_API_KEY
 const TalkToData = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
@@ -15,6 +15,7 @@ const TalkToData = () => {
   const audioChunks = useRef([]);
 
   useEffect(() => {
+    console.log("Gemini API Key:",API_KEY);
     const ai = new GoogleGenerativeAI(API_KEY);
     setModel(ai.getGenerativeModel({ model: 'gemini-2.5-flash' }));
   }, []);
@@ -25,6 +26,7 @@ const TalkToData = () => {
   setIsLoading(true);
 
   try {
+    
     const formattedHistory = updatedHistory.slice(0, -1).map((msg) => ({
       role: msg.role === 'ai' ? 'model' : 'user',
       parts: [{ text: msg.content }]
